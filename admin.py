@@ -8,8 +8,6 @@ from datetime import datetime
 #global conn
 
 class Admin():
-    #def __init__(self):
-    #    global conn
 
     def CreateDatabaseClerk():
         sqlite3.connect('anbar.db')
@@ -21,13 +19,14 @@ class Admin():
                     
                                         id int primary_key not null, 
                                         fullname text not null,
+                                        password text not null,
                                         is_admin boolean not null 
                     );''')
         print("Table is create")
     
-    def InsertClerk(ID, fullname, is_admin):
+    def InsertClerk(ID, fullname, password, is_admin):
         conn = sqlite3.connect('anbar.db')
-        conn.execute("insert into clerk(id,fullname,is_admin)values({},'{}',{});".format(ID, fullname, is_admin))
+        conn.execute("insert into clerk(id,fullname,password, is_admin)values({},'{}', '{}',{});".format(ID, fullname, password, is_admin))
         conn.commit()
         print("{} is add Successfully".format(fullname))       
         conn.close()
@@ -39,9 +38,9 @@ class Admin():
         print("{} is removed Successfully".format(ID))
         conn.close()
 
-    def UpdateClerk(ID, fullname, is_admin):
+    def UpdateClerk(ID, fullname,password, is_admin):
         conn = sqlite3.connect('anbar.db')
-        conn.execute("update clerk set fullname='{}', is_admin={} where id={};".format(fullname, is_admin, ID))
+        conn.execute("update clerk set fullname='{}',password='{}', is_admin={} where id={};".format(fullname,password, is_admin, ID))
         conn.commit()
         print("{} is updated Successfully".format(ID))
         conn.close()
@@ -59,28 +58,53 @@ class Admin():
             print(i)
 
 class Product:
-    #def __ini__():
-    #    global p_conn 
-    #    p_conn.connect('anbar.db')
-    #    print("Connected Successfully")
-    def CreateTableProduct():
+    def conn():
+        global conn 
         conn = sqlite3.connect('anbar.db')
+    def CreateTableProduct():
+        #conn = sqlite3.connect('anbar.db')
+        conn()
         print("Connect is already in use")
         conn.execute("create table product(p_id int primary_key not null, p_name text not null,p_serial int not null, p_comment text not null)")
         print("Table is created")
     
     def InsertProduct(ID, name, serial, comment):
-        conn = sqlite3.connect('anbar.db')
+        #conn = sqlite3.connect('anbar.db')
+        conn()
         conn.execute("insert into product(p_id, p_name, p_serial, p_comment)values({},'{}', {}, '{}')".format(ID, name, serial, comment))
         conn.commit()
         print("Product added Successfully")
         conn.close()
+    
+    def DeleteProduct(ID):
+        conn()
+        #conn.sqlite3.connect('anbar.db')
+        conn.execute('delete from product weher id={}'.format(ID))
+        conn.commit()
+        print("Product is delete")
+        conn.close()
 
+    def UpdateProduct(ID, name, serial, comment):
+        conn()
+        conn.eexcute("update product set p_name='{}', p_serial={}, p_comment='{}' where p_id={}".format(name, serial, comment, ID))
+        conn.commit()
+        print("Product is updated")
+        conn.close()
 
+    def SearchProduct(ID):
+        conn()
+        search = conn.execute('select * from product where p_id={}'.format(ID))
+        for i in search:
+            print(i)
+        conn.commit()
+        conn.close()
 
-
-
-
-
-
+    def ShowAll():
+        conn()
+        search = conn.execute('select * from product')
+        for i in search:
+            print(i)
+        conn.commit()
+        conn.close()
+            
 
